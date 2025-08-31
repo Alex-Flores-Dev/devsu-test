@@ -69,10 +69,11 @@ Este diagrama representa tus pipelines de GitHub Actions para Node.js y Kubernet
 
 ## 💡 Mejoras e next steps
 
-- Se usan **secretos de GitHub** para kubeconfig, Docker Hub y Codecov.
-- CI es independiente de CD, pero produce artefactos (imagen Docker) que CD despliega.
-- Se utilizo sealed secrets para una mejor gestion
-- Idealmente se deberia usar argo o fluxCD para tener un flujo GitOps efectivo
-- CodeCoverage con SonnarQube u otro no free idealmente
-- Crear Job y templates reutilizables de github o design patterns
-- Agregar un analisis de seguridad al las imagenes (no se logro por el tiempo establecido)
+- Se utilizan **Secrets de GitHub** para `kubeconfig`, Docker Hub y Codecov.  
+- CI es independiente de CD, pero genera artefactos (imagen Docker) que luego CD despliega.  
+- Se utilizaron **Sealed Secrets** para una mejor gestión de secretos.  
+- Idealmente, se debería usar **Argo CD** o **FluxCD** para implementar un flujo GitOps efectivo.  
+- Para Code Coverage, lo ideal sería integrar **SonarQube** u otra herramienta profesional (no gratuita).  
+- Se recomienda crear **Jobs y templates reutilizables** en GitHub siguiendo patrones de diseño.  
+- Se debería agregar un **análisis de seguridad de las imágenes**, aunque no se logró por el tiempo disponible.
+

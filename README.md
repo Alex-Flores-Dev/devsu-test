@@ -76,4 +76,3 @@ Este diagrama representa tus pipelines de GitHub Actions para Node.js y Kubernet
 - Para Code Coverage, lo ideal sería integrar **SonarQube** u otra herramienta profesional (no gratuita).  
 - Se recomienda crear **Jobs y templates reutilizables** en GitHub siguiendo patrones de diseño.  
 - Se debería agregar un **análisis de seguridad de las imágenes**, aunque no se logró por el tiempo disponible.
-

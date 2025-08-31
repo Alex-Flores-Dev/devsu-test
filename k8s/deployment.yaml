@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: devsu-app
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: devsu-app
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: devsu-app
-          image: alexflores/devsu-app:latest
+          image: alexdev92ops/devsu:latest
           ports:
             - containerPort: 8000
           env:

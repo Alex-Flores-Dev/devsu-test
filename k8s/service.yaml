@@ -5,8 +5,9 @@ metadata:
 spec:
   selector:
     app: devsu-app
+  type: NodePort
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8000
-  type: ClusterIP
+      port: 80          # puerto dentro del cluster
+      targetPort: 8000  # puerto donde tu app escucha
+      nodePort: 30080   # puerto externo en el nodo (debe estar entre 30000-32767)

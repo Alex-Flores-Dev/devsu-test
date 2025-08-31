@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devsu-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devsu-app
+  template:
+    metadata:
+      labels:
+        app: devsu-app
+    spec:
+      containers:
+        - name: devsu-app
+          image: alexdev92ops/devsu:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: devsu-app-secret
+                  key: DATABASE_NAME
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: devsu-app-secret
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: devsu-app-secret
+                  key: DATABASE_PASSWORD

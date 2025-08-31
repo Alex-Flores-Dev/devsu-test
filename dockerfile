@@ -2,11 +2,11 @@ FROM node:22.14-alpine AS deps
 
 WORKDIR /app
 
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ libc-dev linux-headers
 
-COPY package*.json ./
+COPY package.json package-lock.json* ./
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
@@ -17,17 +17,16 @@ WORKDIR /app
 RUN apk add --no-cache sqlite-libs tini
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app ./
+COPY --from=deps /app ./ 
 
 RUN addgroup -S app && adduser -S app -G app \
-  && chown -R app:app /app
+    && chown -R app:app /app
 
 USER app
 
-ENV NODE_ENV=production \
-    PORT=8080
+ENV NODE_ENV=production
 
-EXPOSE 8080
+EXPOSE 8000
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["npm", "start"]

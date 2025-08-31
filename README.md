@@ -1,142 +1,71 @@
-# Demo Devops NodeJs
+# Diagrama de pipelines CI/CD
 
-This is a simple application to be used in the technical test of DevOps.
+Este diagrama representa tus pipelines de GitHub Actions para Node.js y Kubernetes.
 
-## Getting Started
+```mermaid
+    subgraph CI ["Node.js CI/CD Pipeline (ci.yaml)"]
+        A1[Push a main / PR] --> B1[Checkout repository]
+        B1 --> C1[Setup Node.js v22]
+        C1 --> D1[Install dependencies (npm ci)]
+        D1 --> E1[Install ESLint]
+        E1 --> F1[Run ESLint]
+        F1 --> G1[Run Jest tests with coverage]
+        G1 --> H1[Upload coverage to Codecov]
+        H1 --> I1[Build Docker image ghcr.io/alex-flores-dev/devsu:latest]
+        I1 --> J1[Login to Docker Hub]
+        J1 --> K1[Tag Docker image for Docker Hub]
+        K1 --> L1[Push Docker image to Docker Hub]
+    end
 
-### Prerequisites
-
-- Node.js 18.15.0
-
-### Installation
-
-Clone this repo.
-
-```bash
-git clone https://bitbucket.org/devsu/demo-devops-nodejs.git
+    subgraph CD ["Kubernetes Deploy Pipeline (cd.yaml)"]
+        A2[Push a main] --> B2[Checkout repository]
+        B2 --> C2[Setup kubectl v1.28.0]
+        C2 --> D2[Configure Kubeconfig from secret]
+        D2 --> E2[Apply manifests from k8s/]
+    end
 ```
+# Notas
+ Se utilizo Codecov para el coverage del codigo
+ <p align="center">
+  <img src="img/codecov.png" alt="Captura de pantalla" width="600"/>
+</p>
+# Explicación de los pipelines CI/CD
 
-Install dependencies.
+## CI Pipeline (`ci.yaml`)
 
-```bash
-npm i
-```
+- Se ejecuta en **pushes** y **pull requests** al branch `main`.
+- Instala **Node.js**, dependencias y **ESLint**.
+- Ejecuta **tests con Jest** y sube la cobertura a **Codecov**.
+- Construye y sube la **imagen Docker** al registro y Docker Hub.
 
-### Database
+## CD Pipeline (`cd.yaml`)
 
-The database is generated as a file in the main path when the project is first run, and its name is `dev.sqlite`.
+- Se ejecuta solo en **pushes** al branch `main`.
+- Configura **kubectl** usando un **secreto de GitHub**.
+- Aplica los **manifiestos de Kubernetes** desde el directorio `k8s/`.
 
-Consider giving access permissions to the file for proper functioning.
+## Flujo integrado
 
-## Usage
+- El pipeline de **CI** construye y publica la **imagen Docker**.
+- El pipeline de **CD** despliega esa imagen en **Kubernetes** usando los manifiestos.
 
-To run tests you can use this command.
+---
+## DEPLOYMENT MINIKUBE
 
-```bash
-npm run test
-```
+- Para verificar que funciona correctamente se uso minikube por temas de tiempo
+ <p align="center">
+  <img src="img/minikubeip.png" alt="Captura de pantalla" width="600"/>
+</p>
+- Verificamos que la aplicacion este funcionando en el minikubeip
 
-To run locally the project you can use this command.
+ <p align="center">
+  <img src="img/service-up.png" alt="Captura de pantalla" width="600"/>
+</p>
+---
 
-```bash
-npm run start
-```
 
-Open http://localhost:8000/api/users with your browser to see the result.
+## 💡 Notas
 
-### Features
-
-These services can perform,
-
-#### Create User
-
-To create a user, the endpoint **/api/users** must be consumed with the following parameters:
-
-```bash
-  Method: POST
-```
-
-```json
-{
-    "dni": "dni",
-    "name": "name"
-}
-```
-
-If the response is successful, the service will return an HTTP Status 200 and a message with the following structure:
-
-```json
-{
-    "id": 1,
-    "dni": "dni",
-    "name": "name"
-}
-```
-
-If the response is unsuccessful, we will receive status 400 and the following message:
-
-```json
-{
-    "error": "error"
-}
-```
-
-#### Get Users
-
-To get all users, the endpoint **/api/users** must be consumed with the following parameters:
-
-```bash
-  Method: GET
-```
-
-If the response is successful, the service will return an HTTP Status 200 and a message with the following structure:
-
-```json
-[
-    {
-        "id": 1,
-        "dni": "dni",
-        "name": "name"
-    }
-]
-```
-
-#### Get User
-
-To get an user, the endpoint **/api/users/<id>** must be consumed with the following parameters:
-
-```bash
-  Method: GET
-```
-
-If the response is successful, the service will return an HTTP Status 200 and a message with the following structure:
-
-```json
-{
-    "id": 1,
-    "dni": "dni",
-    "name": "name"
-}
-```
-
-If the user id does not exist, we will receive status 404 and the following message:
-
-```json
-{
-    "error": "User not found: <id>"
-}
-```
-
-If the response is unsuccessful, we will receive status 400 and the following message:
-
-```json
-{
-    "errors": [
-        "error"
-    ]
-}
-```
-
-## License
-
-Copyright © 2023 Devsu. All rights reserved.
+- Se usan **secretos de GitHub** para kubeconfig, Docker Hub y Codecov.
+- Ambas pipelines corren en **ubuntu-latest**.
+- CI es independiente de CD, pero produce artefactos (imagen Docker) que CD despliega.

@@ -2,7 +2,7 @@
 
 Este diagrama representa tus pipelines de GitHub Actions para Node.js y Kubernetes.
 
-```mermaid
+```
     subgraph CI ["Node.js CI/CD Pipeline (ci.yaml)"]
         A1[Push a main / PR] --> B1[Checkout repository]
         B1 --> C1[Setup Node.js v22]
@@ -63,9 +63,16 @@ Este diagrama representa tus pipelines de GitHub Actions para Node.js y Kubernet
 </p>
 ---
 
+## IAC
 
-## 💡 Notas
+- Se agrego los archivos terraform para la infraestructura en AWS, hubo un problema con mi cuenta por eso no se pudo deployar en EKS
+
+## 💡 Mejoras e next steps
 
 - Se usan **secretos de GitHub** para kubeconfig, Docker Hub y Codecov.
-- Ambas pipelines corren en **ubuntu-latest**.
 - CI es independiente de CD, pero produce artefactos (imagen Docker) que CD despliega.
+- Se utilizo sealed secrets para una mejor gestion
+- Idealmente se deberia usar argo o fluxCD para tener un flujo GitOps efectivo
+- CodeCoverage con SonnarQube u otro no free idealmente
+- Crear Job y templates reutilizables de github o design patterns
+- Agregar un analisis de seguridad al las imagenes (no se logro por el tiempo establecido)

@@ -38,7 +38,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/alex-flores-dev/demo:latest .
+          docker build -t ghcr.io/alex-flores-dev/devsu:latest .
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -48,8 +48,8 @@ jobs:
 
       - name: Tag Docker image for Docker Hub
         run: |
-          docker tag ghcr.io/alex-flores-dev/demo:latest ${{ secrets.DOCKERHUB_USERNAME }}/demo:latest
+          docker tag ghcr.io/alex-flores-dev/devsu:latest ${{ secrets.DOCKERHUB_USERNAME }}/devsu:latest
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/demo:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/devsu:latest

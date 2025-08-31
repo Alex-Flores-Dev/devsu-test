@@ -1,26 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: devsu-deployment
-  labels:
-    app: devsu
+  name: devsu-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: devsu
+      app: devsu-app
   template:
     metadata:
       labels:
-        app: devsu
+        app: devsu-app
     spec:
       containers:
-        - name: devsu
-          image: ghcr.io/alex-flores-dev/demo:latest
+        - name: devsu-app
+          image: alexflores/devsu-app:latest
           ports:
             - containerPort: 8000
           env:
-            - name: NODE_ENV
-              value: "production"
-            - name: PORT
-              value: "8000"
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: devsu-app-secret
+                  key: DATABASE_NAME
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: devsu-app-secret
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: devsu-app-secret
+                  key: DATABASE_PASSWORD
